@@ -8,7 +8,9 @@ import time
 
 seed = 11037
 
+import os
 
+os.environ['KMP_DUPLICATE_LIB_OK']='True'
 def parse():
     parser = argparse.ArgumentParser(description="runner")
     parser.add_argument('--env_name', default=None, help='environment name')
@@ -110,6 +112,11 @@ def test(agent, env, total_episodes=30):
     print('rewards', rewards)
     print('running time', time.time() - start_time)
 
+
+import pkg_resources
+
+for entry_point in pkg_resources.iter_entry_points('tensorboard_plugins'):
+    print(entry_point.dist)
 
 if __name__ == '__main__':
     args = parse()

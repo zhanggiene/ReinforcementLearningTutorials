@@ -175,7 +175,8 @@ class Agent_DQN(Agent):
 
         target_values = target_values * self.gamma * (1 - terminal_batch)
 
-        loss = self.loss_function(q_values, reward_batch + target_values)
+        loss = self.loss_function(q_values.float(), reward_batch.float() + target_values.float())
+        loss=loss.float()
         self.optimiser.zero_grad()
         loss.backward()
         for param in self.q_network.parameters():
@@ -188,6 +189,7 @@ class Agent_DQN(Agent):
         self.writer.add_scalar('Train/Average Loss', np.mean(episode_loss), global_step)
         self.writer.add_scalar('Train/Average reward(100)', np.mean(self.last_n_rewards), global_step)
         self.writer.flush()
+        print("write to tensorboard at "+str(global_step))  # write every 10 episode
 
     def train(self):
         """
@@ -238,7 +240,7 @@ class Agent_DQN(Agent):
                     loss = self.optimize_network()
                     episode_loss.append(loss)
 
-                if done:
+                if done :
                     print('Episode:', episode, ' | Steps:', self.step, ' | Eps: ', self.epsilon, ' | Reward: ',
                           sum(episode_reward),
                           ' | Avg Reward: ', np.mean(self.last_n_rewards), ' | Loss: ',
@@ -247,7 +249,8 @@ class Agent_DQN(Agent):
                           sum(episode_reward),
                           ' | Avg Reward: ', np.mean(self.last_n_rewards), ' | Loss: ',
                           np.mean(episode_loss), ' | Mode: ', self.mode, file=self.log_file)
-                    self.log_summary(episode, episode_loss, episode_reward)
+                    if (episode %10 ==0):
+                        self.log_summary(episode, episode_loss, episode_reward)
                     self.last_n_rewards.append(sum(episode_reward))
                     episode_reward.clear()
                     episode_loss.clear()

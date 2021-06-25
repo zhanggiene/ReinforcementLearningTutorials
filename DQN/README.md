@@ -24,5 +24,8 @@ This repo is an implementation of deep-q-learning. It demonstrates the agent lea
 
 - Running the agent for 100 episodes
     - Average reward: 64
+50000000
+
+$tensorboard --logdir ./tensorboard_summary 
     
  

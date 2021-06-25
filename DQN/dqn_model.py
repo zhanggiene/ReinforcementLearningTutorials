@@ -38,4 +38,5 @@ class DQN(nn.Module):
         x = x.view(-1, 7 * 7 * 64)
         x = F.relu(self.fc1(x))
         x = self.fc2(x)
+
         return x
